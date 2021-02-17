@@ -1,5 +1,7 @@
+
 public class ImportantReminderTask implements Runnable{
 
+    private static int COUNT = 0;
     private Reminder reminder;
 
     public ImportantReminderTask(Reminder reminder) {
@@ -8,21 +10,13 @@ public class ImportantReminderTask implements Runnable{
 
     @Override
     public void run() {
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
+        while(COUNT < 3) {
+            System.out.println("YOU HAVE AN \"IMPORTANT\" REMINDER !\nIt was set to: " + DateUtils.beautifyDate(reminder.getExpired()) + " - this is massage number " + ++COUNT + " and the message is: " + reminder.getText());
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        System.out.println();
-        System.out.println("Hello... you have a reminder!\nIt is an important Task: " + reminder.getText() + "\nMassage number 2");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
-        System.out.println();
-        System.out.println("Hello... you have a reminder!\nIt is an important Task: " + reminder.getText() + "\nMassage number 3");
-
     }
 }

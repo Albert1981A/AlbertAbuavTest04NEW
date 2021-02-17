@@ -5,40 +5,23 @@ public class ReminderSystem {
     private static Scanner in = new Scanner(System.in);
 
     private Set<Reminder> reminders;
-    private Thread notify;
     private ReminderTask reminderTask;
 
     public ReminderSystem() {
         this.reminders = new HashSet<>();
         this.reminderTask = new ReminderTask(reminders);
-        this.notify = new Thread(reminderTask);
-        notify.start();
-        flow();
-    }
-
-    public void addReminder(Reminder reminder) {
-        reminders.add(reminder);
-
-    }
-
-    public void printAllSorted() {
-        List<Reminder> list = new ArrayList<>(reminders);
-        Collections.sort(list);
-        PrintUtils.print(list);
-    }
-
-    public void printGoodBye() {
-        System.out.println("Thank you and good bye...");
+        new Thread(reminderTask).start();
     }
 
     public void showMenu() {
-        System.out.println("Welcome to your reminder system \nPlease choose your action:");
+        System.out.println("Please choose your action:");
         System.out.println("1 - Add a new reminder");
-        System.out.println("2 - Show all sorted by date");
+        System.out.println("2 - Show all reminders sorted by date");
         System.out.println("3 - Exit");
     }
 
-    public void flow() {
+    public void startReminderSystem() {
+        System.out.println("Welcome to your reminder system");
         showMenu();
         int action = in.nextInt();
         while (action != 3){
@@ -48,10 +31,12 @@ public class ReminderSystem {
                     break;
                 }
                 case 2: {
-                    printAllSorted();
+                    getReminders().forEach(System.out::println);
                     break;
                 }
                 default:
+                    System.out.println("INVALID INPUT! . . . Please insert: 1, 2, or 3");
+                    System.out.println();
                     break;
             }
             showMenu();
@@ -59,5 +44,25 @@ public class ReminderSystem {
         }
         printGoodBye();
         in.close();
+        System.exit(0);
     }
+
+    public void addReminder(Reminder reminder) {
+        reminders.add(reminder);
+
+    }
+
+    public List<Reminder> getReminders() {
+        List<Reminder> list = new ArrayList<>(reminders);
+        Collections.sort(list);
+        return list;
+    }
+
+    public void printGoodBye() {
+        System.out.println("Thank you and good bye...");
+    }
+
+
+
+
 }

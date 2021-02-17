@@ -11,10 +11,10 @@ public class Reminder implements Comparable<Reminder>{
     private boolean popped;
 
     public Reminder() {
-        this.expired = FactoryUtils.calendar();
+        this.expired = FactoryUtils.getCalendar();
         this.text = "Reminder number - " + COUNT++;
-        this.important = FactoryUtils.bool();
-        this.popped = FactoryUtils.bool();
+        this.important = FactoryUtils.getBoolean();
+        this.popped = false;
     }
 
     public Reminder(Calendar expired, String text, boolean important, boolean popped) {
@@ -59,7 +59,7 @@ public class Reminder implements Comparable<Reminder>{
     @Override
     public String toString() {
         return "Reminder{" +
-                "expired=" + DateUtils.date(expired) +
+                "expired=" + DateUtils.beautifyDate(expired) +
                 ", text='" + text + '\'' +
                 ", important=" + important +
                 ", popped=" + popped +

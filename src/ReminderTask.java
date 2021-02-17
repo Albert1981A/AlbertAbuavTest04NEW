@@ -1,34 +1,35 @@
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
 public class ReminderTask implements Runnable {
 
     private Set<Reminder> reminders;
-    private ImportantReminderTask important;
-    private Thread t1;
 
     public ReminderTask(Set<Reminder> reminders) {
         this.reminders = reminders;
-        this.important = new ImportantReminderTask(null);
-        this.t1 = new Thread(important);
+    }
+
+    public void startImportantThread(Reminder reminder) {
+        new Thread(new ImportantReminderTask(reminder)).start();
     }
 
     @Override
     public void run() {
         while (true) {
-            System.out.println("Hi.............");
-            if (reminders.size() > 0) {
-                for (Reminder reminder : reminders) {
-                    //System.out.println(reminder.getExpired().getTime());
-                important = new ImportantReminderTask(reminder);
-                if (DateUtils.isNow(reminder.getExpired())) {
-                    System.out.println("Hello... you have a reminder!\n" + reminder.getText());
-                    if (reminder.isImportant()) {
-                        t1.start();
-                    }
+            for (Reminder reminder : reminders) {
+                if ((!reminder.isImportant()) && (!reminder.isPopped()) && (reminder.getExpired().before(Calendar.getInstance()))) {
+                    System.out.println("YOU HAVE A REMINDER !\nIt was set to: " + DateUtils.beautifyDate(reminder.getExpired()) + " and the message is: " + reminder.getText());
+                    reminder.setPopped(true);
+                } else if ((reminder.isImportant()) && (!reminder.isPopped()) && (reminder.getExpired().before(Calendar.getInstance()))) {
+                    startImportantThread(reminder);
                 }
-                }
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
             }
         }
 
